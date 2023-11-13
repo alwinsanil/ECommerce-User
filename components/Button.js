@@ -1,9 +1,9 @@
 import styled, { css } from "styled-components";
 
-const StyledButton = styled.button`
+export const ButtonStyle = css`
   border: 0;
-
   border-radius: 5px;
+  text-decoration: none;
   padding: 5px 15px;
   cursor: pointer;
   ${(props) =>
@@ -16,22 +16,13 @@ const StyledButton = styled.button`
       }
     `}
   ${(props) =>
-    props.outline &&
-    css`
-      background-color: transparent;
-      color: #fff;
-      &:hover {
-        background-color: #faf9f6;
-      }
-    `}
-  ${(props) =>
     props.primary &&
     css`
-      background-color: #5542f6;
+      background-color: #7f00ff;
       color: white;
       gap: 30px;
       &:hover {
-        background-color: #5218fa;
+        background-color: #5d3fd3;
       }
     `}
   ${(props) =>
@@ -40,11 +31,10 @@ const StyledButton = styled.button`
       font-size: 1.2rem;
       padding: 10px 20px;
     `}
-  ${(props) =>
-    props.icongap &&
-    css`
-      gap: 30px;
-    `}
+`;
+
+const StyledButton = styled.button`
+  ${ButtonStyle}
 `;
 
 export default function Button({ children, ...rest }) {

@@ -1,11 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-}
-
-module.exports = {
-  nextConfig,
   compiler: {
-    styledComponents: true
+    styledComponents: true,
   },
-}
+  images: {
+    domains: ["alwin-ecommerce.s3.amazonaws.com"],
+  },
+};
+
+module.exports = nextConfig;

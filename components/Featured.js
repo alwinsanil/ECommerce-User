@@ -1,7 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import styled from "styled-components";
 import Center from "./Center";
 import Button from "./Button";
 import { FaShoppingCart, FaPlusSquare } from "react-icons/fa";
+import ButtonLink from "./ButtonLink";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 
 const Bg = styled.div`
   background-color: #222;
@@ -38,33 +42,41 @@ const ButtonsWrapper = styled.div`
   gap: 30px;
   margin-top: 30px;
 `;
-const ButtonItems = styled.div`
+export const ButtonItems = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
 `;
 
-export default function Featured() {
+export default function Featured({ product }) {
+  const { addProducts } = useContext(CartContext);
+  function addFeaturedToCart() {
+    addProducts(product._id);
+  }
   return (
     <Bg>
       <Center>
         <ColumnsWrapper>
           <Column>
             <div>
-              <Title>Pro Anywhere.</Title>
-              <Desc>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Et
-                netus et malesuada fames ac turpis.
-              </Desc>
+              <Title>{product.title}</Title>
+              <Desc>{product.description}</Desc>
               <ButtonsWrapper>
-                <Button white size="l">
+                <ButtonLink
+                  href={"/products/" + product._id}
+                  white={1}
+                  size="l"
+                >
                   <ButtonItems>
                     <FaPlusSquare />
                     Read More
                   </ButtonItems>
-                </Button>
-                <Button icongap primary size="l">
+                </ButtonLink>
+                <Button
+                  onClick={() => addFeaturedToCart()}
+                  primary={1}
+                  size="l"
+                >
                   <ButtonItems>
                     <FaShoppingCart />
                     Add to Cart
