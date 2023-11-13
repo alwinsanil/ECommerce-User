@@ -39,10 +39,14 @@ export function CartContextProvider({ children }) {
       return prev;
     });
   }
+  function removeAll() {
+    setCartProducts([]);
+    localStorage.removeItem("cart");
+  }
 
   return (
     <CartContext.Provider
-      value={{ cartProducts, setCartProducts, addProducts, removeProducts }}
+      value={{ cartProducts, setCartProducts, addProducts, removeProducts, removeAll }}
     >
       {children}
     </CartContext.Provider>

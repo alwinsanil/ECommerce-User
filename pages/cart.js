@@ -4,12 +4,7 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import styled from "styled-components";
 import { BsCreditCardFill } from "react-icons/bs";
-import { FaMinus, FaPlus } from "react-icons/fa";
-import {
-  BiSolidCheckboxMinus,
-  BiSolidMinusSquare,
-  BiSolidPlusSquare,
-} from "react-icons/bi";
+import { BiSolidMinusSquare, BiSolidPlusSquare } from "react-icons/bi";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "@/components/CartContext";
 import axios from "axios";
@@ -19,12 +14,12 @@ const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1.3fr 0.7fr;
   gap: 40px;
-  margin-top: 40px;
 `;
 const Box = styled.div`
   background-color: #fff;
   border-radius: 8px;
   padding: 25px;
+  margin-top: 40px;
 `;
 const ButtonItems = styled.div`
   display: flex;
@@ -37,8 +32,9 @@ const ItemBox = styled.div`
   gap: 30px;
   width: 100%;
   padding: 10px;
+  margin-top: 10px;
   box-shadow: 5px;
-  border-radius: 5px;
+  border-radius: 10px;
 `;
 const ImageBox = styled.div`
   border-radius: 5px;
@@ -60,8 +56,13 @@ const Styledh4 = styled.h4`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-end;
+  align-items: center;
   padding-right: 20px;
+`;
+const QtyStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const QtyButton = styled.button`
   background-color: transparent;
@@ -73,8 +74,21 @@ const CityStyle = styled.div`
 `;
 
 export default function CartPage() {
-  const { cartProducts, addProducts, removeProducts } = useContext(CartContext);
+  const { cartProducts, addProducts, removeProducts, removeAll } =
+    useContext(CartContext);
   const [products, setProducts] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  useEffect(() => {
+    if (window.location.href.includes("success")) {
+      setIsSuccess(true);
+    }
+  }, []);
   useEffect(() => {
     if (!!cartProducts.length) {
       axios
@@ -90,6 +104,41 @@ export default function CartPage() {
       total += product.price;
     }
   }
+  async function goToPayment() {
+    const response = await axios.post("/api/checkout", {
+      name,
+      email,
+      city,
+      postalCode,
+      streetAddress,
+      country,
+      cartProducts,
+    });
+    console.log(response.data.url);
+    if (response.data.url) {
+      window.location = response.data.url;
+    }
+  }
+  if (isSuccess) {
+    if (window.location.href.includes("success")) {
+      removeAll();
+      return (
+        <>
+          <Header />
+          <Center>
+            <Box>
+              <h1>Payment Successful.</h1>
+              <p>
+                Your order has been placed successfully. Details will be send to
+                your email.
+              </p>
+            </Box>
+          </Center>
+        </>
+      );
+    }
+  }
+
   return (
     <>
       <Header />
@@ -118,21 +167,21 @@ export default function CartPage() {
                         </h4>
                       </div>
                       <Styledh4>
-                        <div>
+                        Quantity
+                        <QtyStyle>
                           <QtyButton
                             onClick={() => removeProducts(product._id)}
                           >
                             <BiSolidMinusSquare size="1.5rem" />
                           </QtyButton>
+                          {
+                            cartProducts.filter((id) => id === product._id)
+                              ?.length
+                          }
                           <QtyButton onClick={() => addProducts(product._id)}>
                             <BiSolidPlusSquare size="1.5rem" />
                           </QtyButton>
-                        </div>
-                        Quantity:{" "}
-                        {
-                          cartProducts.filter((id) => id === product._id)
-                            ?.length
-                        }{" "}
+                        </QtyStyle>
                       </Styledh4>
                     </ProductInfo>
                   </ItemBox>
@@ -143,16 +192,51 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <Box>
               <h2>Review Order</h2>
-              <Input type="text" placeholder="Name" />
-              <Input type="text" placeholder="Email" />
-              <Input type="text" placeholder="Street Address" />
+              <Input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Street Address"
+                value={streetAddress}
+                onChange={(e) => setStreetAddress(e.target.value)}
+              />
               <CityStyle>
-                <Input type="text" placeholder="City" />
-                <Input type="text" placeholder="Postal Code" />
+                <Input
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Postal Code"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                />
               </CityStyle>
-              <Input type="text" placeholder="Country" />
+              <Input
+                type="text"
+                placeholder="Country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              />
+              <input
+                type="hidden"
+                name="products"
+                value={cartProducts.join(",")}
+              />
               <h4>Subtotal: ${total}</h4>
-              <Button primary>
+              <Button primary onClick={goToPayment}>
                 <ButtonItems>
                   <BsCreditCardFill />
                   Continue to Payment
