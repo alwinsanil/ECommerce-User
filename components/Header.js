@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Center from "./Center";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import css from "styled-jsx/css";
 
 const StyledHeader = styled.header`
   background-color: #222;
@@ -29,9 +30,14 @@ const NavLink = styled(Link)`
   &:hover {
     color: white;
   }
+  ${(props) =>
+    props.white &&
+    css`
+      color: white;
+    `}
 `;
 
-const Header = () => {
+const Header = ({ active }) => {
   const { cartProducts } = useContext(CartContext);
   return (
     <StyledHeader>
@@ -39,11 +45,41 @@ const Header = () => {
         <Wrapper>
           <Logo href={"/"}>ECommerce</Logo>
           <StyledNav>
-            <NavLink href={"/"}>Home</NavLink>
-            <NavLink href={"/products"}>Products</NavLink>
-            <NavLink href={"/categories"}>Categories</NavLink>
-            <NavLink href={"/account"}>Account</NavLink>
-            <NavLink href={"/cart"}>Cart ({cartProducts.length})</NavLink>
+            {active === "" ? (
+              <NavLink href="/" white={1}>
+                Home
+              </NavLink>
+            ) : (
+              <NavLink href={"/"}>Home</NavLink>
+            )}
+            {active === "products" ? (
+              <NavLink href="/" white={1}>
+                Products
+              </NavLink>
+            ) : (
+              <NavLink href={"/products"}>Products</NavLink>
+            )}
+            {active === "categories" ? (
+              <NavLink href="/" white={1}>
+                Categories
+              </NavLink>
+            ) : (
+              <NavLink href={"/categories"}>Categories</NavLink>
+            )}
+            {active === "account" ? (
+              <NavLink href="/" white={1}>
+                Account
+              </NavLink>
+            ) : (
+              <NavLink href={"/account"}>Account</NavLink>
+            )}
+            {active === "cart" ? (
+              <NavLink href="/" white={1}>
+                Cart ({cartProducts.length})
+              </NavLink>
+            ) : (
+              <NavLink href={"/cart"}>Cart ({cartProducts.length})</NavLink>
+            )}
           </StyledNav>
         </Wrapper>
       </Center>

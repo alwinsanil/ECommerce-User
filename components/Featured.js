@@ -16,9 +16,6 @@ const Title = styled.h1`
   margin: 0;
   font-weight: normal;
   font-size: 3rem;
-  /* @media screen and (min-width: 768px) {
-    font-size: 3rem;
-  } */
 `;
 const Desc = styled.p`
   color: #aaa;

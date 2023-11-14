@@ -56,13 +56,13 @@ const PriceStyle = styled.div`
   font-size: large;
 `;
 export default function ProductBox({ _id, title, description, price, images }) {
-  const url = "/product/" + _id;
+  const url = "/products/" + _id;
   const { addProducts } = useContext(CartContext);
   return (
     <ProductWrapper>
       <Box href={url}>
         <div>
-          <img src={images[0]} fill={true} alt="" />
+          <img src={images?.[0]} fill="true" alt="" />
         </div>
       </Box>
       <ProdInfoBox>

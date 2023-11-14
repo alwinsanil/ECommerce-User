@@ -124,7 +124,7 @@ export default function CartPage() {
       removeAll();
       return (
         <>
-          <Header />
+          <Header active="cart" />
           <Center>
             <Box>
               <h1>Payment Successful.</h1>
@@ -141,7 +141,7 @@ export default function CartPage() {
 
   return (
     <>
-      <Header />
+      <Header active="cart" />
       <Center>
         <ColumnsWrapper>
           <Box>
